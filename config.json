@@ -1,0 +1,36 @@
+{
+    "server": {
+        "port": 3008
+    },
+    "app": {
+        "apiPrefix" : "/korebotkit",
+		"url":"<bot kit domain>"
+    },
+    "credentials": {
+        "apikey": "<bot app key>",
+        "appId": "<client id>",
+		"botId": "<bot id>",
+		"botName": "<bot name>"
+    },
+	"servicenow": {
+        "host": "<serviceNow host>",
+		"userId" : "<serviceNow Bot User>",
+        "authorization": "<ServiceNow app secret>",
+		"queueId": "<serviceNow queue id >",
+		"welcomeMessages" : ["Thank you for contacting support. Someone will be with you shortly to assist you", "How can we help you?"]
+	},
+    "redis": {
+        "options": {
+            "password": "$REDIS_PASS",
+            "host": "$REDIS_HOST",
+            "port": 6379
+        },
+        "available": false
+    },
+    "examples" : {
+        "mockServicesHost"  : "http://localhost:8004"
+    },
+    "liveagentlicense": "8947569",
+	"supportsMessageAck": true,
+	"ignore_auth_urls":["/korebotkit/gethistory"]
+}
