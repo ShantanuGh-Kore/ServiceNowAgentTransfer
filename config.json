@@ -29,6 +29,11 @@
         },
         "available": true
     },
+    "twilio":{
+        "messagingServiceSid" : "<twiliomessaging>",
+        "accountSid" : "<twilioAccountSID>",
+        "authToken" : "<twilioAuthToken>"
+    },
     "examples" : {
         "mockServicesHost"  : "http://localhost:8004"
     },
