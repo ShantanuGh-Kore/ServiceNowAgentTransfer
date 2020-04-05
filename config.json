@@ -4,7 +4,7 @@
     },
     "app": {
         "apiPrefix" : "/korebotkit",
-        "url":"https://versusvirus-botkit.herokuapp.com/"
+        "url":"https://versusvirus-botkit.herokuapp.com"
     },
     "credentials": {
         "apikey": "Xbm1Je9WGvt04WqKDlTHdH/mLC9LGBQrmNn4cOT0iBQ=",
