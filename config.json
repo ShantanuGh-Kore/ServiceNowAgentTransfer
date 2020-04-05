@@ -4,25 +4,24 @@
     },
     "app": {
         "apiPrefix" : "/korebotkit",
-		"url":"<bot kit domain>"
+        "url":"https://b7d437ea.ngrok.io"
     },
     "credentials": {
-        "apikey": "<bot app key>",
-        "appId": "<client id>",
-		"botId": "<bot id>",
-		"botName": "<bot name>"
+        "apikey": "Xbm1Je9WGvt04WqKDlTHdH/mLC9LGBQrmNn4cOT0iBQ=",
+        "appId": "cs-693a618f-a634-564e-a471-8d96f7aa167b",
+        "botId": "st-b76ae715-1fcc-55f9-87d4-3dfc2547f18a",
+        "botName": "CovidHelper"
     },
-	"servicenow": {
-        "host": "<serviceNow host>",
-		"userId" : "<serviceNow Bot User>",
-        "authorization": "<ServiceNow app secret>",
-		"queueId": "<serviceNow queue id >",
-		"welcomeMessages" : ["Thank you for contacting support. Someone will be with you shortly to assist you", "How can we help you?"]
-	},
+    "servicenow": {
+        "host": "https://deepanshujainlearning.service-now.com/",
+        "userId" : "chatbot",
+        "authorization": "Y2hhdGJvdDpjaGF0Ym90",
+        "queueId": "18482790dbc49c10f12d09c4e2961988",
+        "welcomeMessages" : ["Thank you for contacting support. Someone will be with you shortly to assist you", "How can we help you?"]
+    },
     "redis": {
         "options": {
-            "password": "$REDIS_PASS",
-            "host": "$REDIS_HOST",
+            "host": "127.0.0.1",
             "port": 6379
         },
         "available": false
@@ -31,6 +30,6 @@
         "mockServicesHost"  : "http://localhost:8004"
     },
     "liveagentlicense": "8947569",
-	"supportsMessageAck": true,
-	"ignore_auth_urls":["/korebotkit/gethistory"]
+    "supportsMessageAck": true,
+    "ignore_auth_urls":["/korebotkit/gethistory"]
 }

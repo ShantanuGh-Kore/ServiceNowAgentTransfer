@@ -10,6 +10,7 @@ var _ = require('lodash');
 var debug = require('debug')("Agent");
 var redisOperations = require('./redisOperations.js');
 var redis = require("./lib/RedisClient.js").createClient(config.redis);
+
 var lastMsgId;
 var isLastMsg = false;                  
 var idNo ="@L";
@@ -19,13 +20,13 @@ console.log('deleting redis data and user entry for',visitorId);
 redisOperations.deleteRedisData("data:"+visitorId);
 redisOperations.deleteRedisData("user:"+visitorId); 
 }
+
 function sendMessagetoBotUser(req, res) {
     var reqBody     = req.body;
     if (reqBody && reqBody && reqBody.group) {
         var groupId = reqBody.group;
         console.log("Group ID - ", groupId);
-        console.log("Agent Response - ", reqBody.formatted_message);
-        
+        console.log("Agent Response - ", reqBody.formatted_message);        
         var dataFromRedis = redisOperations.getRedisData("data:"+groupId)
             .then(function(data) {
                 if (data) {
@@ -50,15 +51,11 @@ function sendMessagetoBotUser(req, res) {
                         sdk.clearAgentSession(data);
                         clearRedisData(visitorId);
                         clearRedisData(groupId);
-                    }
-
-                    else {
+                    } else {
                         data.message = newMessage;
                         data.message_id = reqBody.sys_id;
                         lastMsgId = data.message_id;
                         if(newMessage.indexOf(idNo)!== -1){
-                        console.log("INCIDENT LINK-------------------", newMessage);
-                        console.log("...................................Inside Create Incident Code");
                         var split = newMessage.split("|");
                         var sys_id = split[0].split("?");
                         var incidentId = split[1].replace("]","");
@@ -87,128 +84,6 @@ function sendMessagetoBotUser(req, res) {
     }
 
 }
-/**
- * getPendingMessages
- *
- * @param {string} visitorId user id
- * @param {string} ssid session id of the live chat
- * @param {string} last message sent/received to/by agent 
- */
-/*function getPendingMessages(visitorId, group, messageLength) {
-    debug("getPendingMessages: %s %s ", visitorId, group, messageLength);
-    return api.getPendingMessages(visitorId, group)
-        .then(function(res) {
-            var dataFromRedis = redisOperations.getRedisData("data:"+visitorId)
-            .then(function(data) {
-            console.log("messages SIZE: "+res.result.length );
-            console.log("Live message length before new message: "+messageLength);
-            if(messageLength < res.result.length ){
-                for(var i = messageLength; i < res.result.length; i++){
-                    var newMessage = res.result[i].formatted_message;
-                    var sysCreatedBy = res.result[i].sys_created_by;
-                    var lastMessageFlag = res.result[i].last_message;
-                    if (sysCreatedBy == 'system' && lastMessageFlag == 'true' &&  (newMessage.indexOf('closed') + newMessage.indexOf('left')) > 0) {
-                        console.log("Agent end condition is true.\n")
-                        data.message = newMessage;
-                        lastMsgId = data.requestId;
-                        console.log('replying '+data.message+" with lastMsgId:"+lastMsgId+" for data.message_id:"+data.message_id);
-                        sdk.sendUserMessage(data, function(err, done) {
-                            console.log('sendUserMessage:', data.message);
-                        }).catch(function(e) {
-                            console.log("sending agent reply error", e);
-                            
-                        });
-                        sdk.clearAgentSession(data);
-                        clearRedisData(visitorId);
-                    }
-
-                    else {
-                        data.message = newMessage;
-                        data.message_id = res.result[i].sys_id;
-                        lastMsgId = data.message_id;
-                        if(newMessage.indexOf(idNo)!== -1){
-                        console.log("INCIDENT LINK-------------------", newMessage);
-                        console.log("...................................Inside Create Incident Code");
-                        //newMessage = newMessage.replace(/[@La-z/.?_=]/g, "");
-                        var split = newMessage.split("|");
-                        var sys_id = split[0].split("?");
-                        var incidentId = split[1].replace("]","");
-                        //newMessage = "["+incidentId+"]("+config.servicenow.host+"/incident.do?"+sys_id+")";
-                        newMessage = split[1].replace("]","");
-                        data.message = "Call Record "+newMessage+" created.";
-                        }
-                        console.log('replying '+data.message+" with lastMsgId:"+lastMsgId+" for data.message_id:"+data.message_id);
-                        sdk.sendUserMessage(data, function(err, done) {
-                            console.log("sendUserMessage", data.message);
-                        }).catch(function(e) {
-                            console.log(e);
-                            debug("sending agent reply error", e);
-                            clearRedisData(visitorId);
-                        });
-                        messageLength = res.result.length;
-                        var entry = {
-                            visitorId: visitorId,
-                            group: group,
-                            messageLength : res.result.length
-                        };
-                        redisOperations.updateRedisWithEntry(visitorId,entry);
-                    }
-                };
-                
-                console.log("Live message length after new message: "+messageLength);
-            }
-        })
-        })
-        .catch(function(e) {
-            console.error(e);
-            clearRedisData(visitorId);
-            
-        });
-        
-}*/
-
-/*
- * Schedule a job to fetch messages every 5 seconds 
- */
-//schedular.scheduleJob('*/5 * * * * *', function() { 
-    //console.log("running scheduler...");
-/*    debug('schedular triggered');
-    var promiseArr = [];
-    redis.KEYS('user:*',function(err, object){
-        for(var i = 0; i < object.length; i++){
-            redisOperations.getRedisData(object[i])
-            .then(function(result) {
-               promiseArr.push(getPendingMessages(result.visitorId, result.group, result.messageLength));
-            })
-        }
-    return Promise.all(promiseArr).then(function() {
-        debug('scheduled finished');
-    }).catch(function(e) {
-        debug('error in schedular', e);
-    });
-    })
-}); */
-
-//schedular.scheduleJob('*/180 * * * * *', function() { 
-  //  debug('schedular triggered');
-   /* var promiseArr = [];
-    redis.KEYS('data:*',function(err, object){
-        console.log("will be extending request",object);
-        for(var i = 0; i < object.length; i++){
-            redisOperations.getRedisData(object[i])
-            .then(function(result) {
-               console.log("User ID connected to Agent so extending the session ---",result.context.session.UserContext._id);
-               sdk.extendRequestId(result);
-            })
-        }
-    return Promise.all(promiseArr).then(function() {
-        debug('scheduled finished');
-    }).catch(function(e) {
-        debug('error in schedular', e);
-    });
-    })
-});*/
-
 function gethistory(req, res) {
     var userId = req.query.userId;
     return redisOperations.getRedisData("data:"+userId)
@@ -241,31 +116,17 @@ function gethistory(req, res) {
 })
 }
 
-/**
- * connectToAgent
- *
- * @param {string} requestId request id of the last event
- * @param {object} data last event data
- * @returns {promise}
- */
 function connectToAgent(requestId, data, cb) {
     console.log("Connected to agent...");
-    //********** */   
     var agentLanguage='';
     if(data.context.langPreference){
     console.log("Language Settings:",data.context.langPreference);
     agentLanguage=data.context.langPreference;
-    //welcomeMessages=data.context.langWelMessages;
-    //console.log("customied message:->",welcomeMessages);
     }
     else
     {
-        //console.log("Default Messages:->",welcomeMessages);
-        agentLanguage=config.servicenow.queueId;
-        
-    }
-    /********* */
-    
+        agentLanguage=config.servicenow.queueId;   
+    }    
     var formdata = {};
     formdata.licence_id = config.liveagentlicense;
     formdata.welcome_message = "";
@@ -292,33 +153,8 @@ function connectToAgent(requestId, data, cb) {
        
     };
     api.createChatQueueEntry(chat_queue_entry_data,agentLanguage).then(function(chat_queue_entry) {
-        /*var group = chat_queue_entry.result.group;
-        var messageLength;
-        var entry = {
-            visitorId: visitorId,
-            group: group,
-            messageLength : 0
-        };
-
-        /* Botkit messages removed as per Simon instruction on 2ndApril 2019
-        data.message = welcomeMessages[0];
-        sdk.sendUserMessage(data, cb);
-        data.message = welcomeMessages[1];
-        //********* 
-            
-        //********* 
-        
-        //sdk.sendUserMessage(data, cb);
-        redisOperations.updateRedisWithData(group,data).then(function(){
-            redisOperations.setTtl(group,'data');
-        });
-        redisOperations.updateRedisWithEntry(visitorId,group,entry).then(function(){
-            redisOperations.setTtl(visitorId,'user');
-        });
-        //redisOperations.updateRedisWithEntry(group,entry);*/
-
-	// Shantanu Code to handle error in create chat queue creation start
-	console.log("Error response status while chat queue creation: ", chat_queue_entry.statusCode);
+    // Shantanu Code to handle error in create chat queue creation start
+    console.log("Error response status while chat queue creation: ", chat_queue_entry.statusCode);
 
         if(chat_queue_entry.statusCode != undefined){
             sdk.clearAgentSession(data);            
@@ -338,11 +174,8 @@ function connectToAgent(requestId, data, cb) {
             redisOperations.updateRedisWithEntry(visitorId,group,entry).then(function(){
             redisOperations.setTtl(visitorId,'user');
             });
-             //data.message = "Agent will be assigned shortly.";
              redisOperations.updateRedisWithEntry(group,entry);
-             //return sdk.sendUserMessage(data, cb);
-        }	    
-	// Shantanu Code to handle error in create chat queue creation end
+        }       
         });
   }
 
@@ -359,8 +192,6 @@ function onBotMessage(requestId, data, cb) {
     var entryFromRedis = redisOperations.getRedisData("user:"+visitorId)
     .then(function(result) {
     if(result){
-        //console.log("entryFromRedis **** ",result)
-
         if (data.message.length === 0 || data.message === '') {
             return;
         }
@@ -392,31 +223,22 @@ function onBotMessage(requestId, data, cb) {
 function onUserMessage(requestId, data, cb) {
     var databackup = data;
     var data = data.toJSON();
-    var visitorId = data.context.session.UserContext._id;
-    
-    console.log("Visitor ID",visitorId);
-
-    //var entry = _map[visitorId];
+    var visitorId = data.context.session.UserContext._id; 
     var entryFromRedis  = redisOperations.getRedisData("user:"+visitorId)
     .then(function(entry) {
     if (entry) {
-		if (data.message.trim().toLowerCase() == "stop chat") {
+        if (data.message.trim().toLowerCase() == "stop chat") {
             entry.messageLength = 0;
             clearRedisData(visitorId);
-            clearRedisData(entry.group);
-            
-
-            sdk.clearAgentSession(data);
-            
+            clearRedisData(entry.group);   
+            sdk.clearAgentSession(data);          
             data.message = "Ok, the conversation with the Agent has been stopped. You can continue chatting with the bot.";
             sdk.sendUserMessage(data, cb);
-            
             var message_data = {
             "message": "Please end the chat. Thanks!",
             "group": entry.group,
             "reflected_field": "comments"
             }
-            
             return api.sendMessage(message_data,entry.group)
             .catch(function(e) {
                 console.error(e);
@@ -427,27 +249,24 @@ function onUserMessage(requestId, data, cb) {
         }
         //route to live agent
         else {
-			
-			var group = entry.group;
-			redisOperations.updateRedisWithData(group,data).then(function(){ 
-				redisOperations.setTtl(group,'data'); 
-			});
-			
-			redisOperations.updateRedisWithData(visitorId,data).then(function(){ 
-				redisOperations.setTtl(visitorId,'data'); 
-			});
-			
-			redisOperations.updateRedisWithEntry(visitorId,group,entry).then(function(){
-				redisOperations.setTtl(visitorId,'user');
-			});
-		
-		
+            
+            var group = entry.group;
+            redisOperations.updateRedisWithData(group,data).then(function(){ 
+                redisOperations.setTtl(group,'data'); 
+            });
+            
+            redisOperations.updateRedisWithData(visitorId,data).then(function(){ 
+                redisOperations.setTtl(visitorId,'data'); 
+            });
+            
+            redisOperations.updateRedisWithEntry(visitorId,group,entry).then(function(){
+                redisOperations.setTtl(visitorId,'user');
+            });
             var message_data = {
             "message": data.message,
             "group": entry.group,
             "reflected_field": "comments"
             }
-        
             return api.sendMessage(message_data,entry.group)
             .catch(function(e) {
                 console.error(e);
@@ -490,45 +309,11 @@ module.exports = {
     on_webhook : function(requestId, data, componentName, callback) {
         console.log("On web hook");
         console.log(botName,botId);
-
-        // Setting bot language as English by default
-        //data.metaInfo = {
-        //    setBotLanguage : "en"
-        //};
-       
-        //data = newData['userId'];
-
         if (componentName === 'WelcomeDelay1') {
-            //data.message ="Outages";
             setTimeout(function() {
-            //return sdk.sendBotMessage(data, callback);
                 callback(null, data);
             }, 2000);
-        } else if(componentName === 'WelcomeDelay2'){
-            //data.message ="WelcomeTaskList";
-            setTimeout(function() {
-                //return sdk.sendBotMessage(data, callback);
-                callback(null, data);
-            }, 3000);
-        }else if(componentName === 'ApprovalDetailsDelay'){
-            //data.message ="InfoApproval";
-            setTimeout(function() {
-            //return sdk.sendBotMessage(data, callback);
-                callback(null, data);
-            }, 2000);
-        }else if(componentName === 'RequestDelay'){
-            //data.message ="ServiceRequestCall";
-            setTimeout(function() {
-            //return sdk.sendBotMessage(data, callback);
-                callback(null, data);
-            }, 3000);
-        }else if(componentName === 'IncidentServiceDelay'){
-            //data.message ="CreateIncidentSevc";
-            setTimeout(function() {
-            //return sdk.sendBotMessage(data, callback);
-                callback(null, data);
-            }, 3000);
-        }
+        } 
     },
     gethistory: gethistory,
     sendMessagetoBotUser: sendMessagetoBotUser
