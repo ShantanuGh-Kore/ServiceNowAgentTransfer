@@ -15,7 +15,7 @@
     "servicenow": {
         "host": "https://deepanshujainlearning.service-now.com/",
         "userId" : "chatbot",
-        "authorization": "Y2hhdGJvdDpjaGF0Ym90",
+        "authorization": "Basic Y2hhdGJvdDpjaGF0Ym90",
         "queueId": "18482790dbc49c10f12d09c4e2961988",
         "welcomeMessages" : ["Thank you for contacting support. Someone will be with you shortly to assist you", "How can we help you?"]
     },
