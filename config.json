@@ -7,24 +7,24 @@
         "url":"https://versusvirus-botkit.herokuapp.com"
     },
     "credentials": {
-        "apikey": "Xbm1Je9WGvt04WqKDlTHdH/mLC9LGBQrmNn4cOT0iBQ=",
-        "appId": "cs-693a618f-a634-564e-a471-8d96f7aa167b",
-        "botId": "st-b76ae715-1fcc-55f9-87d4-3dfc2547f18a",
-        "botName": "CovidHelper"
+        "apikey": "<bot id>",
+        "appId": "<bot client id>",
+        "botId": "<bot stream id>",
+        "botName": "<bot name>"
     },
     "servicenow": {
-        "host": "https://deepanshujainlearning.service-now.com/",
-        "userId" : "chatbot",
-        "authorization": "Basic Y2hhdGJvdDpjaGF0Ym90",
-        "queueId": "18482790dbc49c10f12d09c4e2961988",
+        "host": "<SNOW host>",
+        "userId" : "<SNOW bot user>",
+        "authorization": "<Basic auth>",
+        "queueId": "<SNOW chat queue>",
         "welcomeMessages" : ["Thank you for contacting support. Someone will be with you shortly to assist you", "How can we help you?"]
     },
     "redis": {
         "options": {
-            "host": "ec2-3-217-110-240.compute-1.amazonaws.com",
-            "port": 24799,
-            "user":"h",
-            "password":"p1d1c0ebaff492248ed72d042c578bf02294f45ae3837554b097c50692e40800a"
+            "host": "<redis instance host>",
+            "port": <redis port>,
+            "user":"<redis user id>",
+            "password":"<redis password>"
             
         },
         "available": true
@@ -32,7 +32,6 @@
     "examples" : {
         "mockServicesHost"  : "http://localhost:8004"
     },
-    "liveagentlicense": "8947569",
     "supportsMessageAck": true,
     "ignore_auth_urls":["/korebotkit/gethistory"]
 }
