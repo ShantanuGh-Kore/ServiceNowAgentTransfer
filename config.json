@@ -4,7 +4,7 @@
     },
     "app": {
         "apiPrefix" : "/korebotkit",
-        "url":"https://b7d437ea.ngrok.io"
+        "url":"https://versusvirus-botkit.herokuapp.com/"
     },
     "credentials": {
         "apikey": "Xbm1Je9WGvt04WqKDlTHdH/mLC9LGBQrmNn4cOT0iBQ=",
@@ -21,10 +21,13 @@
     },
     "redis": {
         "options": {
-            "host": "127.0.0.1",
-            "port": 6379
+            "host": "ec2-3-217-110-240.compute-1.amazonaws.com",
+            "port": 24799,
+            "user":"h",
+            "password":"p1d1c0ebaff492248ed72d042c578bf02294f45ae3837554b097c50692e40800a"
+            
         },
-        "available": false
+        "available": true
     },
     "examples" : {
         "mockServicesHost"  : "http://localhost:8004"
