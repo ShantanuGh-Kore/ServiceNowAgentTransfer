@@ -10,6 +10,7 @@ var _ = require('lodash');
 var debug = require('debug')("Agent");
 var redisOperations = require('./redisOperations.js');
 var redis = require("./lib/RedisClient.js").createClient(config.redis);
+var twilio = require('twilio');
 
 var lastMsgId;
 var isLastMsg = false;                  
@@ -277,6 +278,7 @@ function onUserMessage(requestId, data, cb) {
         
     } else {
         console.log("bot responding directly - visitor entry not found");
+        sdk.clearAgentSession(databackup);
         return sdk.sendBotMessage(databackup, cb);
     }
     });
@@ -289,6 +291,20 @@ function onAgentTransfer(requestId, data, callback) {
     console.log("in onAgentTransfer...");
     connectToAgent(requestId, data, callback);
 }
+function sendSmsNotification(canton,age,sex){
+var accountSid = 'ACef6715d758490b0ab3a9d3d75a047cb3';
+var authToken = '8b8eedf31238b185e3cbf57b1ef660de';
+
+var client = new twilio(accountSid, authToken);
+
+client.messages.create({
+    body: 'CovidHelper: I found a emergency at '+canton+','+age+','+sex+'. Please help immediately.',
+    to: '+41798566654',  // Text this number
+    //messagingServiceSid: 'MG86f2da6572094b47b1ea137a7244c2b9', // From a valid Twilio messageService id
+    messagingServiceSid: 'MGe515df264fe478b1c5637ea0936137c1'
+}).then((message) => console.log(message));
+}
+
 
 module.exports = {
     botId: botId,
@@ -303,6 +319,7 @@ module.exports = {
     },
     on_agent_transfer: function(requestId, data, callback) {
         console.log("module exports on_agent_transfer");
+        sendSmsNotification(data.context.entities.Canton,data.context.entities.Age,data.context.entities.Gender);
         debug('on_webhook');
         onAgentTransfer(requestId, data, callback);
     },
