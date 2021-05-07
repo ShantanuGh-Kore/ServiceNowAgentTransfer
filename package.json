@@ -78,7 +78,7 @@
     "through": "^2.3.8",
     "twilio": "latest",
     "type-is": "^1.6.18",
-    "underscore": "^1.10.2",
+    "underscore": "^1.12.1",
     "unpipe": "^1.0.0",
     "url-template": "^2.0.8",
     "utils-merge": "^1.0.1",
