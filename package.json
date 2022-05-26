@@ -16,7 +16,7 @@
     "cjson": "^0.3.3",
     "content-disposition": "^0.5.3",
     "content-type": "^1.0.4",
-    "convict": "^5.2.0",
+    "convict": "^6.2.3",
     "cookie": "^0.3.1",
     "cookie-signature": "^1.1.0",
     "debug": "^2.6.9",
